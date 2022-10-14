@@ -5,6 +5,7 @@ from matplotlib import pyplot as plt
 from matplotlib.pyplot import figure
 import datetime
 from scipy import stats
+from pandas.tseries.holiday import USFederalHolidayCalendar as calendar
 
 # Construct DataFrame
 
@@ -17,6 +18,12 @@ df["perc_change"] = (df["close"] - df["open"]) / df["open"]
 df["10dvol"] = df["perc_change"].rolling(10).std()  # Calculate rolling 10 day vol.
 df["10dvol"] = df["10dvol"].shift(periods = 1)  # Take previous day's vol.
 df["10dvol"] = df["10dvol"].fillna(0)  # Replace NaN values with 0.
+
+# Holidays
+
+cal = calendar()
+holidays = cal.holidays(start = df["date"].min(),
+                        end = df["date"].max())
 
 # Economic news release dates since 01.01.2021
 
@@ -47,8 +54,8 @@ all_days = list(set(df["date"]))
 ######################################################################################################
 #INPUTS
 
-strike_price = 19153
-list_name = prio1
+strike_price = 19395
+list_name = holidays
 
 ######################################################################################################
 ######################################################################################################
